@@ -9,6 +9,7 @@ import (
 
 
 func home(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Server", "Go")
 	w.Write([]byte("1234\n"))
 }
 
@@ -19,8 +20,7 @@ func noteView(w http.ResponseWriter, r *http.Request) {
 		return 
 	}	
 
-	msg := fmt.Sprintf("display some kind of note with id %d \n", id)
-	w.Write([]byte(msg))
+	fmt.Fprintf(w, "display some kind of note with id %d \n", id)
 }
 
 func noteCreate(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +28,7 @@ func noteCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func noteCreatePost(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(201)
+	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("save a note\n"))
 }
 

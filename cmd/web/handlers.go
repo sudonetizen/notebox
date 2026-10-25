@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 ) 
@@ -30,18 +29,5 @@ func noteCreate(w http.ResponseWriter, r *http.Request) {
 func noteCreatePost(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("save a note\n"))
-}
-
-func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /{$}", home)
-	mux.HandleFunc("GET /note/view/{id}", noteView)
-	mux.HandleFunc("GET /note/create", noteCreate)
-	mux.HandleFunc("POST /note/create", noteCreatePost)
-
-	log.Print("starting server on: 4000")
-
-	err := http.ListenAndServe(":4000", mux)
-	log.Fatal(err)
 }
 

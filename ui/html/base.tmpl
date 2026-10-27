@@ -1,0 +1,25 @@
+{{define "base"}}
+
+<!doctype html>
+<html lang='en'>
+	<head>
+		<meta charset='utf-8'>
+		<title>{{template "title" .}} - Notebox</title>
+	</head>
+
+	<body>
+		<header>
+			<h1><a href='/'>Notebox</a></h1>
+		</header>
+
+		<main>
+			{{template "main". }}
+		</main>
+
+		<footer>
+			Powered by <a href='/'>Notebox</a>
+		</footer>
+	</body>
+</html>
+
+{{end}}

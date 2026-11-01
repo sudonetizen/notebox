@@ -7,6 +7,13 @@ import (
 	"net/http"
 ) 
 
+
+// application struct 
+type application struct {
+	logger *slog.Logger 
+}
+
+
 func main() {
 	// flags
 	addr := flag.String("addr", ":4000", "http network address")
@@ -17,6 +24,12 @@ func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 
+	// int application struct 
+	app := &application{
+		logger: logger,
+	}
+
+
 	// server mux and file server 
 	mux := http.NewServeMux()
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
@@ -24,10 +37,10 @@ func main() {
 	
 	// handle and handle functions 
 	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
-	mux.HandleFunc("GET /{$}", home)
-	mux.HandleFunc("GET /note/view/{id}", noteView)
-	mux.HandleFunc("GET /note/create", noteCreate)
-	mux.HandleFunc("POST /note/create", noteCreatePost)
+	mux.HandleFunc("GET /{$}", app.home)
+	mux.HandleFunc("GET /note/view/{id}", app.noteView)
+	mux.HandleFunc("GET /note/create", app.noteCreate)
+	mux.HandleFunc("POST /note/create", app.noteCreatePost)
 
 
 	logger.Info("starting server", "addr", *addr)

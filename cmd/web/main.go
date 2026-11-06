@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 	"database/sql"
+	"notebox/internal/models"
 
 	"github.com/joho/godotenv" 
 	_"github.com/go-sql-driver/mysql"
@@ -15,6 +16,7 @@ import (
 // application struct 
 type application struct {
 	logger *slog.Logger 
+	notes *models.NoteModel 
 }
 
 
@@ -47,6 +49,7 @@ func main() {
 	// int application struct 
 	app := &application{
 		logger: logger,
+		notes: &models.NoteModel{DB: db}, 
 	}
 
 

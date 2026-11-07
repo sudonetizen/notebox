@@ -41,7 +41,16 @@ func (app *application) noteCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) noteCreatePost(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("save a note\n"))
+	title := "somekind of title"
+	content := "somekind of content"
+	expires := 4 
+
+	id, err := app.notes.Insert(title, content, expires)
+	if err != nil {
+		app.serverError(w, r, err)
+		return 
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/note/view/%d", id), http.StatusSeeOther)
 }
 

@@ -21,7 +21,19 @@ type NoteModel struct {
 
 
 func (m *NoteModel) Insert(title string, content string, expires int) (int, error) {
-	return 0, nil
+	stmt := "insert into notes (title, content, created, expires) values (?, ?, utc_timestamp(), date_add(utc_timestamp(), interval ? day))"
+
+	rst, err := m.DB.Exec(stmt, title, content, expires)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := rst.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil 
 }
 
 

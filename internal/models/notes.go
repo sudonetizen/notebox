@@ -1,8 +1,9 @@
 package models 
 
 import (
-	"database/sql"
 	"time"
+	"errors"
+	"database/sql"
 )
 
 
@@ -38,7 +39,19 @@ func (m *NoteModel) Insert(title string, content string, expires int) (int, erro
 
 
 func (m *NoteModel) Get(id int) (Note, error) {
-	return Note{}, nil 
+	stmt := "select id, title, content, created, expires from notes where expires > utc_timestamp() and id = ?"
+	row := m.DB.QueryRow(stmt, id)
+	n := Note{} 
+	err := row.Scan(&n.ID, &n.Title, &n.Content, &n.Created, &n.Expires)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return Note{}, ErrNoRecord
+		} else {
+			return Note{}, err 
+		}
+	}
+
+	return n, nil 
 }
 
 

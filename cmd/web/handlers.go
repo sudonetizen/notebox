@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"errors"
 	"strconv"
 	"net/http"
 	"html/template"
+	"notebox/internal/models"
 ) 
 
 
@@ -33,7 +35,17 @@ func (app *application) noteView(w http.ResponseWriter, r *http.Request) {
 		return 
 	}	
 
-	fmt.Fprintf(w, "display some kind of note with id %d \n", id)
+	note, err := app.notes.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			http.NotFound(w, r)
+		} else {
+			app.serverError(w, r, err)
+		}
+		return 
+	}
+
+	fmt.Fprintf(w, "%+v", note)
 }
 
 func (app *application) noteCreate(w http.ResponseWriter, r *http.Request) {

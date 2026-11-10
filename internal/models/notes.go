@@ -56,5 +56,26 @@ func (m *NoteModel) Get(id int) (Note, error) {
 
 
 func (m *NoteModel) Latest() ([]Note, error) {
-	return nil, nil 
+	stmt := "select id, title, content, created, expires from notes where expires > utc_timestamp() order by id desc limit 10"
+	rows, err := m.DB.Query(stmt)	
+	if err != nil {
+		return nil, err 
+	}
+	defer rows.Close() 
+	
+	notes := []Note{} 
+	for rows.Next() {
+		n := Note{} 
+		err := rows.Scan(&n.ID, &n.Title, &n.Content, &n.Created, &n.Expires)
+		if err != nil {
+			return nil, err 
+		}
+		notes = append(notes, n)
+	}
+	
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return notes, nil 
 }

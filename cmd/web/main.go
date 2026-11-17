@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 	"database/sql"
+	"html/template"
 	"notebox/internal/models"
 
 	"github.com/joho/godotenv" 
@@ -17,6 +18,7 @@ import (
 type application struct {
 	logger *slog.Logger 
 	notes *models.NoteModel 
+	templateCache map[string]*template.Template 
 }
 
 
@@ -47,9 +49,16 @@ func main() {
 
 
 	// int application struct 
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1) 
+	}
+
 	app := &application{
 		logger: logger,
 		notes: &models.NoteModel{DB: db}, 
+		templateCache: templateCache, 
 	}
 
 

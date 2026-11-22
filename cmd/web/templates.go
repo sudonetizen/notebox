@@ -7,6 +7,7 @@ import (
 )
 
 type templateData struct {
+	CurrentYear int  
 	Note models.Note 
 	Notes []models.Note
 }
